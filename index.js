@@ -1,35 +1,25 @@
-gsap.registerPlugin(ScrollTrigger,ScrollSmoother,SplitText)
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
 ScrollSmoother.create({
   smooth: 3,
-  effects: true
-})
+  effects: true,
+});
 
-gsap.from(
-  ".hero",
-  {
+function animaPage() {
+  gsap.from(".hero", {
     opacity: 0,
     duration: 1,
-  }
-)
-gsap.from(
-  "picture:nth-child(1)",
-  {
+  });
+  gsap.from("picture:nth-child(1)", {
     y: -60,
     duration: 1,
-  }
-)
-gsap.from(
-  "picture:nth-child(2)",
-  {
+  });
+  gsap.from("picture:nth-child(2)", {
     y: 60,
     duration: 1,
-  }
-)
+  });
 
-gsap.from(
-  ".card",
-  {
+  gsap.from(".card", {
     opacity: 0,
     y: 30,
     filter: "blur(10px)",
@@ -39,13 +29,10 @@ gsap.from(
       start: "0% 70%",
       end: "100% 70%",
       scrub: true,
-    }
-  }
-)
+    },
+  });
 
-gsap.from(
-  ".secaoObrigado ul li",
-  {
+  gsap.from(".secaoObrigado ul li", {
     opacity: 0,
     x: 40,
     filter: "blur(10px)",
@@ -55,13 +42,10 @@ gsap.from(
       start: "0% 80%",
       end: "100% 50%",
       scrub: true,
-    }
-  }
-)
+    },
+  });
 
-gsap.from(
-  "footer",
-  {
+  gsap.from("footer", {
     y: "-30%",
     immediateRender: false,
     scrollTrigger: {
@@ -70,30 +54,46 @@ gsap.from(
       invalidateOnRefresh: true,
       start: "0% 100%",
       end: "100% 100%",
-    }
-  }
-)
+    },
+  });
 
-// const split = SplitText.create(".textoSplit", {
-//     type: "lines, words, chars",
-//     mask: "lines",
-//   });
+  const grupoTextoSplit = document.querySelectorAll(".textoSplit");
 
-// gspap.from(split.chars, {
-//     y: 40,
-//     duration: 0.3,
-//     stagger: 0.05,
-//   });
-
-SplitText.create(".textoSplit", {
-  type: "lines, words, chars",
-  mask: "lines",
-  onSplit(self) {
-    return gsap.from(self.chars, {
-      y: 40, 
-      opacity: 0,
-      duration: 0.3,  
-      stagger: 0.05
+  grupoTextoSplit.forEach((elemento) => {
+    SplitText.create(elemento, {
+      type: "lines, words, chars",
+      mask: "lines",
+      onSplit(self) {
+        return gsap.from(self.chars, {
+          y: 40,
+          opacity: 0,
+          duration: 0.3,
+          stagger: 0.05,
+          scrollTrigger: {
+            trigger: elemento,
+          },
+        });
+      },
     });
-  }
+  });
+}
+
+// Preloader - Timeline
+const tl = gsap.timeline({
+  onComplete() {
+    animaPage();
+    gsap.to("#preloader", {
+      opacity: 0,
+      display: "none",
+    });
+  },
+});
+
+tl.to("#preloader path", {
+  strokeDashoffset: 0,
+  duration: 1,
+});
+tl.to("#preloader path", {
+  fill: "rgb(168, 19, 19)",
+  duration: 0.5,
 });
